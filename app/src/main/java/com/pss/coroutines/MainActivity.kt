@@ -43,6 +43,17 @@ class MainActivity : AppCompatActivity() {
          }
          job.cancel()*/
 
+        CoroutineScope(Dispatchers.Main).launch {
+            val job = CoroutineScope(Dispatchers.IO).launch(start = CoroutineStart.LAZY) {
+                delay(1000)
+                Log.d("TAG","코루틴")
+            }
+            job.cancel("job Cancelled by SangSun", InterruptedException("Cancelled Forcibly"))
+            job.invokeOnCompletion {
+                Log.d("TAG", "throwable : $it")
+            }
+            Log.d("TAG", job.getCancellationException().toString())
+        }
 
     }
 }
