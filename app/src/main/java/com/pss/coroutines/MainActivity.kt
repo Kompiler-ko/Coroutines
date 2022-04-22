@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.MainThread
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.flow
 import java.lang.IllegalArgumentException
 import kotlin.concurrent.thread
 
@@ -27,22 +29,48 @@ class MainActivity : AppCompatActivity() {
               }*/
 
 
-        /* val job = CoroutineScope(Dispatchers.Main).launch {
-             launch {
+      /*   val job = CoroutineScope(Dispatchers.Main).launch {
+             launch(Dispatchers.IO) {
                  for (n in 0..100000){
                      Log.d("TAG","Child scope1 $n")
                  }
              }
-             launch {
+             launch(Dispatchers.IO) {
                  for (n in 0..100000){
                      Log.d("TAG","Child scope2 $n")
                  }
              }
-             for (n in 0..100000){
-                 Log.d("TAG","parent scope $n")
-             }
          }
          job.cancel()*/
+
+/*
+        lifecycleScope.launch(Dispatchers.IO) {
+            for (n in 0..99999){
+                Log.d("TAG","$n")
+            }
+        }
+
+        val userList = listOf("User1", "User2", "User3", "User4", "User5")
+        lifecycleScope.launch(Dispatchers.IO) {
+            flow {
+                userList.forEach { user ->
+                    emit(user)
+                    delay(1500)
+                }
+            }.collect{ user ->
+                Log.d("TAG", user)
+            }
+        }
+*/
+
+
+        lifecycleScope.launch {
+            Log.d("TAG", "parent : ${Thread.currentThread().name}")
+            launch(Dispatchers.IO){
+                Log.d("TAG", "child : ${Thread.currentThread().name}")
+            }
+        }
+
 
     /*    CoroutineScope(Dispatchers.Main).launch {
         }
@@ -62,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        CoroutineScope(Dispatchers.Main).launch {
+ /*       CoroutineScope(Dispatchers.Main).launch {
             val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
                 Log.d("TAG","exceptionHandler : $throwable")
                 when(throwable){
@@ -80,6 +108,6 @@ class MainActivity : AppCompatActivity() {
                 throw InterruptedException()
             }
             job.start()
-        }
+        }*/
     }
 }
