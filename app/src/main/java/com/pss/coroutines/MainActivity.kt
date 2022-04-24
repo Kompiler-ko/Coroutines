@@ -3,6 +3,7 @@ package com.pss.coroutines
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.annotation.MainThread
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
@@ -11,7 +12,10 @@ import java.lang.IllegalArgumentException
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
-    @OptIn(InternalCoroutinesApi::class)
+    private val viewModel by viewModels<ViewModel>()
+
+
+    @OptIn(InternalCoroutinesApi::class, kotlin.ExperimentalStdlibApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -64,12 +68,18 @@ class MainActivity : AppCompatActivity() {
 */
 
 
-        lifecycleScope.launch {
-            Log.d("TAG", "parent : ${Thread.currentThread().name}")
-            launch(Dispatchers.IO){
-                Log.d("TAG", "child : ${Thread.currentThread().name}")
+/*        lifecycleScope.launch {
+            Log.d("TAG", "parent : ${coroutineContext[CoroutineDispatcher]}")
+            launch(Dispatchers.IO) {
+                Log.d("TAG", "child : ${coroutineContext[CoroutineDispatcher]}")
             }
-        }
+        }*/
+
+    /*    //activity
+        viewModel.viewModelScope()
+*/
+        viewModel.viewModelDispatcher()
+
 
 
     /*    CoroutineScope(Dispatchers.Main).launch {
